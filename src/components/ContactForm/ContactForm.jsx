@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-const FormContact = ({addContact }) => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+const FormContact = ({ addContact }) => {
+  const [name, setName, number] = useState('');
+  /* const [number, setNumber] = useState(''); */
   //state = { name: '', number: '' };
 
   const leverArmChange = e => {
@@ -12,23 +12,20 @@ const FormContact = ({addContact }) => {
       setName(value);
     }
     if (name === 'number') {
-      setNumber(value);
+      setName(value);
     }
-
-    // this.setState({ [e.target.name]: e.target.value });
   };
 
   const resetForm = () => {
     setName('');
-    setNumber('');
-    // this.setState({ name: '', number: '' });
+    setName('');
   };
 
   const leverArmSubmit = e => {
     const name = e.target.name.value;
     const number = e.target.number.value;
     e.preventDefault();
-    addContact( {name, number });
+    addContact({ name, number });
     resetForm();
   };
 
