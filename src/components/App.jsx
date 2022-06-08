@@ -1,6 +1,6 @@
 //import { Component } from 'react';
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { nanoid } from 'nanoid';
 
 import FormContact from './ContactForm/ContactForm';
@@ -18,41 +18,37 @@ const App = () => {
     { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
   ]);
   const [filter, setFilter] = useState('');
-
-
+  const firstRender = useRef(true);
 
   const addContact = ({ name, number }) => {
-  
     if (
-      contacts.some(contact => contact.name.toLowerCase() === name.toLowerCase())
+      contacts.some(
+        contact => contact.name.toLowerCase() === name.toLowerCase()
+      )
     ) {
       alert(`This contact ${name} already exists!`);
       return;
     }
 
-    setContacts(prev => (
-       [
-       ...prev,
-        {
-          name,
-          number,
-          id: nanoid(),
-        },
-      ]
-    ));
+    setContacts(prevState => {
+      return [...prevState, { name, number, id: nanoid() }];
+    });
   };
 
   const filterContacts = () => {
-    if (filter)
-      return contacts.filter(contact =>
+    if (filter) {
+      const filtered = contacts.filter(contact =>
         contact.name.toLowerCase().includes(filter.toLowerCase())
       );
-
+      return filtered;
+    }
     return contacts;
   };
 
   const removeContact = id => {
-    setContacts(prev => prev.filter(contact => contact.id !== id));
+    setContacts(prevState => {
+      return [...prevState.filter(contact => contact.id !== id)];
+    });
   };
 
   const handleChange = e => {
@@ -60,15 +56,10 @@ const App = () => {
   };
 
   useEffect(() => {
-    const localContacts = JSON.parse(localStorage.getItem('contacts'));
-    if (localContacts) {
-      setContacts(localContacts);
+    if (!firstRender.current) {
+      localStorage.setItem('contacts', JSON.stringify(contacts));
     }
-  }, []);
-
- /*  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]); */
+  }, [contacts]);
 
   return (
     <>

@@ -1,31 +1,40 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const FormContact = ({ addContact }) => {
-  const [name, setName, number] = useState('');
-  /* const [number, setNumber] = useState(''); */
-  //state = { name: '', number: '' };
+  const [formState, setName] = useState({
+    name: '',
+    number: '',
+  });
+  const { name, number } = formState;
 
   const leverArmChange = e => {
-    const { name, value } = e.target;
+    setName(prevState => {
+      return { ...prevState, [e.target.name]: e.target.value };
+    });
+
+    /*   const { name, value } = e.target;
 
     if (name === 'name') {
       setName(value);
     }
     if (name === 'number') {
       setName(value);
-    }
+    } */
   };
 
   const resetForm = () => {
-    setName('');
-    setName('');
+    setName({
+      name: '',
+      number: '',
+    });
   };
 
   const leverArmSubmit = e => {
     const name = e.target.name.value;
     const number = e.target.number.value;
     e.preventDefault();
-    addContact({ name, number });
+    addContact( {name, number} );
     resetForm();
   };
 
@@ -61,3 +70,7 @@ const FormContact = ({ addContact }) => {
 };
 
 export default FormContact;
+
+FormContact.propTypes = {
+  addContact: PropTypes.func.isRequired,
+};
